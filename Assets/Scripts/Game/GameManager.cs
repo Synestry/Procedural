@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Framework;
+using Assets.Scripts.Game.Component.Terrain;
 
 namespace Assets.Scripts.Game
 {
@@ -11,6 +12,8 @@ namespace Assets.Scripts.Game
             base.Awake();
 
             Instance = this;
+
+            Components.Add(new TerrainComponent());
         }
     }
 }

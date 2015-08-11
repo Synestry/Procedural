@@ -13,7 +13,11 @@ namespace Assets.Scripts.Game
 
             Instance = this;
 
-            Components.Add(new TerrainComponent());
+            var terrain = new TerrainComponent();
+
+            Components.Add(terrain);
+
+            terrain.Initialise();
         }
     }
 }

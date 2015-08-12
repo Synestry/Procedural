@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Scripts.Game.Component.Terrain.Block;
 
 using UnityEngine;
+
+using Debug = UnityEngine.Debug;
 
 namespace Assets.Scripts.Game.Component.Terrain
 {
@@ -11,10 +14,7 @@ namespace Assets.Scripts.Game.Component.Terrain
 
         public List<Vector3> Directions
         {
-            get
-            {
-                return new List<Vector3>() { Vector3.down, Vector3.up, Vector3.back, Vector3.forward, Vector3.left, Vector3.right };
-            }
+            get { return new List<Vector3>() { Vector3.down, Vector3.up, Vector3.back, Vector3.forward, Vector3.left, Vector3.right }; }
         }
 
         public List<Vector3> Vertices { get; private set; }
@@ -45,21 +45,27 @@ namespace Assets.Scripts.Game.Component.Terrain
 
         private void AddFaceIfSolid(IBlock block, Vector3 direction)
         {
-            if (block.GetAdjacentBlockIn(direction).Info.IsSolidIn(-direction))
+            if (block.GetType() == typeof(AirBlock)) return;
+
+            if (!block.GetAdjacentBlockIn(direction).Info.IsSolidIn(-direction))
             {
-                AddFaceVertices(block, direction);
-                AddFaceTriangles();
-                AddFaceUvs(block, direction);
+                var offsets = block.Info.GetFaceVertexOffsets(direction);
+
+                if (offsets != null)
+                {
+                    AddFaceVertices(block, offsets);
+                    AddFaceTriangles();
+                    AddFaceUvs(block, direction);
+                }
             }
         }
 
-        private void AddFaceVertices(IBlock block, Vector3 direction)
+        private void AddFaceVertices(IBlock block, Vector3[] offsets)
         {
-            foreach (var vector in block.Info.GetFaceVertexOffsets(direction))
-            {
-                Vertices.Add(block.Position + vector);
-            }
-
+                foreach (var vector in offsets)
+                {;
+                    Vertices.Add(block.Position + vector);
+                }
         }
 
         private void AddFaceTriangles()

@@ -45,9 +45,46 @@ namespace Assets.Scripts.Game.Component.Terrain
                 }
             }
 
-            SetBlock(new DirtBlock(), 3, 5, 2);
+            //Heart :)
+            SetBlock(new GrassBlock(), 5, 0, 0);
 
-            UpdateChunk();
+            SetBlock(new GrassBlock(), 4, 1, 0);
+            SetBlock(new GrassBlock(), 5, 1, 0);
+            SetBlock(new GrassBlock(), 6, 1, 0);
+
+            SetBlock(new GrassBlock(), 3, 2, 0);
+            SetBlock(new GrassBlock(), 4, 2, 0);
+            SetBlock(new GrassBlock(), 5, 2, 0);
+            SetBlock(new GrassBlock(), 6, 2, 0);
+            SetBlock(new GrassBlock(), 7, 2, 0);
+
+            SetBlock(new GrassBlock(), 2, 3, 0);
+            SetBlock(new GrassBlock(), 3, 3, 0);
+            SetBlock(new GrassBlock(), 4, 3, 0);
+            SetBlock(new GrassBlock(), 5, 3, 0);
+            SetBlock(new GrassBlock(), 6, 3, 0);
+            SetBlock(new GrassBlock(), 7, 3, 0);
+            SetBlock(new GrassBlock(), 8, 3, 0);
+
+            SetBlock(new GrassBlock(), 1, 4, 0);
+            SetBlock(new GrassBlock(), 2, 4, 0);
+            SetBlock(new GrassBlock(), 3, 4, 0);
+            SetBlock(new GrassBlock(), 4, 4, 0);
+            SetBlock(new GrassBlock(), 5, 4, 0);
+            SetBlock(new GrassBlock(), 6, 4, 0);
+            SetBlock(new GrassBlock(), 7, 4, 0);
+            SetBlock(new GrassBlock(), 8, 4, 0);
+            SetBlock(new GrassBlock(), 9, 4, 0);
+
+            SetBlock(new GrassBlock(), 2, 5, 0);
+            SetBlock(new GrassBlock(), 3, 5, 0);
+            SetBlock(new GrassBlock(), 4, 5, 0);
+            SetBlock(new GrassBlock(), 6, 5, 0);
+            SetBlock(new GrassBlock(), 7, 5, 0);
+            SetBlock(new GrassBlock(), 8, 5, 0);
+
+            SetBlock(new GrassBlock(), 3, 6, 0);
+            SetBlock(new GrassBlock(), 7, 6, 0);
         }
 
         public override void Update(float dt)

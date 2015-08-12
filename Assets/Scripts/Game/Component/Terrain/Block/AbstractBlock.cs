@@ -12,8 +12,6 @@ namespace Assets.Scripts.Game.Component.Terrain.Block
 
         public Vector3 WorldPosition { get { return ChunkEntity.Position + Position; } }
 
-        public MeshData MeshData { get; set; }
-
         public IBlockInfo Info { get; protected set; }
 
         public AbstractBlock()

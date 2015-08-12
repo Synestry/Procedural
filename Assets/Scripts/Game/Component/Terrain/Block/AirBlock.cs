@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Game.Component.Terrain.Block.Info;
 
 namespace Assets.Scripts.Game.Component.Terrain.Block
 {
     public class AirBlock : AbstractBlock
     {
-        public override bool IsSolidIn(Vector3 direction)
+        public AirBlock()
         {
-            return false;
+            Info = new AirBlockInfo();
         }
     }
 }

@@ -15,6 +15,11 @@ namespace Assets.Scripts.Game.Component.Terrain
             CreateChunk(1, 1, 1);
         }
 
+        public override void Update(float dt)
+        {
+            Chunks.ForEach(ch => ch.Update(dt));
+        }
+
         public void CreateChunk(int x, int y, int z)
         {
             Chunks.Add(new ChunkEntity(new Vector3(x, y, z), Quaternion.Euler(Vector3.zero)));

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Game.Component.Terrain.Block.Info;
+
+using UnityEngine;
 
 namespace Assets.Scripts.Game.Component.Terrain.Block
 {
@@ -8,10 +10,10 @@ namespace Assets.Scripts.Game.Component.Terrain.Block
 
         Vector3 Position { get; }
 
+        IBlockInfo Info { get; }
+
         void SetPosition(ChunkEntity chunkEntity, Vector3 position);
 
         IBlock GetAdjacentBlockIn(Vector3 direction);
-
-        bool IsSolidIn(Vector3 direction);
     }
 }

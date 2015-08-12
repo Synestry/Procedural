@@ -12,13 +12,15 @@ namespace Assets.Scripts.Game.Component.Terrain
 
         private TerrainComponent TerrainComponent { get { return GameManager.Instance.Get<TerrainComponent>(); } }
 
-        private MeshFilter MeshFilter { get; set; }
-        private MeshRenderer MeshRenderer { get; set; }
-        private MeshCollider MeshCollider { get; set; }
+        private MeshFilter MeshFilter { get { return GameObject.GetComponent<MeshFilter>(); } }
+        private MeshRenderer MeshRenderer { get { return GameObject.GetComponent<MeshRenderer>(); } }
+        private MeshCollider MeshCollider { get { return GameObject.GetComponent<MeshCollider>(); } }
 
         private IBlock[,,] blocks;
 
         private MeshData MeshData { get; set; }
+
+        private bool isDirty;
 
         public ChunkEntity(Vector3 position, Quaternion rotation)
         {
@@ -26,10 +28,7 @@ namespace Assets.Scripts.Game.Component.Terrain
 
             MeshData = new MeshData();
 
-            Initialise("Chunk");
-            MeshFilter = GameObject.AddComponent<MeshFilter>();
-            MeshRenderer = GameObject.AddComponent<MeshRenderer>();
-            MeshCollider = GameObject.AddComponent<MeshCollider>();
+            Initialise(GameManager.Instance.ChunkPrefab);
             GameObject.transform.position = position;
             GameObject.transform.rotation = rotation;
 
@@ -41,15 +40,23 @@ namespace Assets.Scripts.Game.Component.Terrain
                 {
                     for (int z = 0; z < ChunkSize; z++)
                     {
-                        AddBlockAt(new AirBlock(), x, y, z);
+                        SetBlock(new AirBlock(), x, y, z);
                     }
                 }
             }
 
-            AddBlockAt(new DirtBlock(), 3, 5, 2);
-            AddBlockAt(new DirtBlock(), 3, 4, 2);
+            SetBlock(new DirtBlock(), 3, 5, 2);
 
             UpdateChunk();
+        }
+
+        public override void Update(float dt)
+        {
+            if (isDirty)
+            {
+                UpdateChunk();
+                isDirty = false;
+            }
         }
 
         public void UpdateChunk()
@@ -70,12 +77,15 @@ namespace Assets.Scripts.Game.Component.Terrain
             MeshFilter.mesh.Clear();
             MeshFilter.mesh.vertices = MeshData.Vertices.ToArray();
             MeshFilter.mesh.triangles = MeshData.Triangles.ToArray();
+            MeshFilter.mesh.uv = MeshData.UVs.ToArray();
+            MeshFilter.mesh.RecalculateNormals();
         }
 
-        public void AddBlockAt(IBlock block, int x, int y, int z)
+        public void SetBlock(IBlock block, int x, int y, int z)
         {
             blocks[x, y, z] = block;
             block.SetPosition(this, new Vector3(x, y, z));
+            isDirty = true;
         }
 
         public IBlock GetBlock(int x, int y, int z)

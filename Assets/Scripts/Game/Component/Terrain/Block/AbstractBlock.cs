@@ -1,33 +1,29 @@
-﻿using Assets.Scripts.Game.Component.Terrain.Block.Info;
-
-using UnityEngine;
+﻿using Assets.Scripts.Framework.Utils.Vector;
+using Assets.Scripts.Game.Component.Terrain.Block.Info;
+using Assets.Scripts.Game.Component.Terrain.Chunk;
 
 namespace Assets.Scripts.Game.Component.Terrain.Block
 {
     public class AbstractBlock : IBlock
     {
-        public ChunkEntity ChunkEntity { get; set; }
+        public ChunkEntity Chunk { get; set; }
 
-        public Vector3 Position { get; set; }
+        public IntVector3 Position { get; set; }
 
-        public Vector3 WorldPosition { get { return ChunkEntity.Position + Position; } }
+        public IntVector3 WorldPosition { get { return Chunk.Position + Position; } }
 
         public IBlockInfo Info { get; protected set; }
 
-        public AbstractBlock()
+        public AbstractBlock(ChunkEntity chunk, IntVector3 position)
         {
+            Chunk = chunk;
+            Position = position;
             Info = new BlockInfo();
         }
 
-        public void SetPosition(ChunkEntity chunkEntity, Vector3 position)
+        public IBlock GetAdjacentBlockIn(IntVector3 direction)
         {
-            ChunkEntity = chunkEntity;
-            Position = position;
-        }
-
-        public IBlock GetAdjacentBlockIn(Vector3 direction)
-        {
-            return ChunkEntity.GetBlock(Position + direction);
+            return Chunk.GetBlock(Position + direction);
         }
     }
 }

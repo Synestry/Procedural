@@ -1,50 +1,74 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+
 using Assets.Scripts.Framework.Component;
+using Assets.Scripts.Framework.Utils.Extensions;
+using Assets.Scripts.Framework.Utils.Vector;
 using Assets.Scripts.Game.Component.Terrain.Block;
-using UnityEngine;
+using Assets.Scripts.Game.Component.Terrain.Chunk;
 
 namespace Assets.Scripts.Game.Component.Terrain
 {
     public class TerrainComponent : AbstractGameComponent
     {
-        public List<ChunkEntity> Chunks = new List<ChunkEntity>(); 
+        public Dictionary<IntVector3, ChunkEntity> Chunks { get; set; }
+
+        public TerrainComponent()
+        {
+            Chunks = new Dictionary<IntVector3, ChunkEntity>();
+        }
 
         public void Initialise()
         {
-            CreateChunk(1, 1, 1);
-        }
-
-        public override void Update(float dt)
-        {
-            Chunks.ForEach(ch => ch.Update(dt));
-        }
-
-        public void CreateChunk(int x, int y, int z)
-        {
-            Chunks.Add(new ChunkEntity(new Vector3(x, y, z), Quaternion.Euler(Vector3.zero)));
-        }
-
-        public ChunkEntity GetChunk(int x, int y, int z)
-        {
-            var pos = new Vector3();
-            pos.x = Mathf.FloorToInt(x / ChunkEntity.ChunkSize) * ChunkEntity.ChunkSize;
-            pos.y = Mathf.FloorToInt(y / ChunkEntity.ChunkSize) * ChunkEntity.ChunkSize;
-            pos.z = Mathf.FloorToInt(z / ChunkEntity.ChunkSize) * ChunkEntity.ChunkSize;
-
-            return Chunks.SingleOrDefault(ch => ch.Position == pos);
-        }
-
-        public IBlock GetBlock(int x, int y, int z)
-        {
-            var chunk = GetChunk(x, y, z);
-
-            if (chunk != null)
+            for (int x = 0; x < 2; x++)
             {
-                return chunk.GetBlock(x - (int)chunk.Position.x, y - (int)chunk.Position.y, z - (int)chunk.Position.z);
+                for (int y = 0; y < 2; y++)
+                {
+                    for (int z = 0; z < 2; z++)
+                    {
+                        AddChunk(new IntVector3(x * ChunkEntity.ChunkSize, y * ChunkEntity.ChunkSize, z * ChunkEntity.ChunkSize));
+                    }
+                }
             }
 
-            return new AirBlock();
+            new Thread(() => Chunks.Values.ToList().ForEach(ch => ch.UpdateChunk())).Start();
+        }
+
+        public void AddChunk(IntVector3 position)
+        {
+            Chunks[position] = ChunkFactory.CreateFlatGrassChunk(position);
+        }
+
+        public void DestroyChunk(IntVector3 position)
+        {
+            DestroyChunk(Chunks[position]);
+        }
+
+        public void DestroyChunk(ChunkEntity chunk)
+        {
+            chunk.Destroy();
+            Chunks[chunk.Position] = null;
+        }
+
+        public override void LateUpdate(float dt)
+        {
+            foreach (var chunk in Chunks.Values) chunk.RenderChunk();
+        }
+
+        public ChunkEntity GetChunk(IntVector3 worldPositon)
+        {
+            var chunkPosition = worldPositon.GetChunkPosition(ChunkEntity.ChunkSize);
+
+            return Chunks.ContainsKey(chunkPosition) ? Chunks[chunkPosition] : null;
+        }
+
+        public IBlock GetBlock(IntVector3 worldPosition)
+        {
+            var chunk = GetChunk(worldPosition);
+
+            return chunk != null ? chunk.GetBlock(worldPosition - chunk.Position) : new AirBlock();
         }
     }
 }

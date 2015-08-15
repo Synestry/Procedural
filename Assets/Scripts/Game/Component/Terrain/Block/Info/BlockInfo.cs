@@ -8,9 +8,10 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
 {
     public class BlockInfo : IBlockInfo
     {
-        protected Dictionary<Vector3, Vector3[]> VertexOffsets = new Dictionary<Vector3, Vector3[]>
+        protected Dictionary<IntVector3, Vector3[]> VertexOffsets = new Dictionary<IntVector3, Vector3[]>
         {
-            { Vector3.up, new []
+            { 
+                IntVector3.Up, new []
                 {
                     new Vector3(-0.5f, 0.5f, 0.5f),
                     new Vector3(0.5f, 0.5f, 0.5f),
@@ -19,7 +20,8 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
                 }
             },
 
-            { Vector3.down, new []
+            { 
+                IntVector3.Down, new []
                 {
                     new Vector3(-0.5f, -0.5f, -0.5f),
                     new Vector3(0.5f, -0.5f, -0.5f),
@@ -28,7 +30,8 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
                 }
             },
 
-            { Vector3.forward, new []
+            { 
+                IntVector3.Forward, new []
                 {
                     new Vector3(0.5f, -0.5f, 0.5f),
                     new Vector3(0.5f, 0.5f, 0.5f),
@@ -37,7 +40,7 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
                 }
             },
 
-            { Vector3.right, new []
+            { IntVector3.Right, new []
                 {
                     new Vector3(0.5f, -0.5f, -0.5f),
                     new Vector3(0.5f, 0.5f, -0.5f),
@@ -46,7 +49,8 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
                 }
             },
 
-            { Vector3.back, new []
+            { 
+                IntVector3.Back, new []
                 {
                     new Vector3(-0.5f, -0.5f, -0.5f),
                     new Vector3(-0.5f, 0.5f, -0.5f),
@@ -54,7 +58,8 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
                     new Vector3(0.5f, -0.5f, -0.5f),
                 }
             },
-            { Vector3.left, new []
+            { 
+                IntVector3.Left, new []
                 {
                     new Vector3(-0.5f, -0.5f, 0.5f),
                     new Vector3(-0.5f, 0.5f, 0.5f),
@@ -64,27 +69,27 @@ namespace Assets.Scripts.Game.Component.Terrain.Block.Info
             },
         };
 
-        protected Dictionary<Vector3, IntVector2> TileCoordinates = new Dictionary<Vector3, IntVector2>
+        protected Dictionary<IntVector3, IntVector2> TileCoordinates = new Dictionary<IntVector3, IntVector2>
         {
-            { Vector3.up, new IntVector2() { x = 2, y = 0 } },
-            { Vector3.down, new IntVector2() { x = 1, y = 0 } },
-            { Vector3.left, new IntVector2() { x = 3, y = 0 } },
-            { Vector3.right, new IntVector2() { x = 3, y = 0 } },
-            { Vector3.back, new IntVector2() { x = 3, y = 0 } },
-            { Vector3.forward, new IntVector2() { x = 3, y = 0 } },
-        }; 
+            { IntVector3.Up, new IntVector2() { x = 2, y = 0 } },
+            { IntVector3.Down, new IntVector2() { x = 1, y = 0 } },
+            { IntVector3.Left, new IntVector2() { x = 3, y = 0 } },
+            { IntVector3.Right, new IntVector2() { x = 3, y = 0 } },
+            { IntVector3.Back, new IntVector2() { x = 3, y = 0 } },
+            { IntVector3.Forward, new IntVector2() { x = 3, y = 0 } },
+        };
 
-        public virtual Vector3[] GetFaceVertexOffsets(Vector3 direction)
+        public virtual Vector3[] GetFaceVertexOffsets(IntVector3 direction)
         {
             return VertexOffsets[direction];
         }
 
-        public virtual IntVector2 GetTileCoordinates(Vector3 direction)
+        public virtual IntVector2 GetTileCoordinates(IntVector3 direction)
         {
             return TileCoordinates[direction];
         }
 
-        public virtual bool IsSolidIn(Vector3 direction)
+        public virtual bool IsSolidIn(IntVector3 direction)
         {
             return true;
         }

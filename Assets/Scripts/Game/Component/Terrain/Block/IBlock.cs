@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Game.Component.Terrain.Block.Info;
+﻿using Assets.Scripts.Framework.Utils.Vector;
+using Assets.Scripts.Game.Component.Terrain.Block.Info;
+using Assets.Scripts.Game.Component.Terrain.Chunk;
 
 using UnityEngine;
 
@@ -6,14 +8,14 @@ namespace Assets.Scripts.Game.Component.Terrain.Block
 {
     public interface IBlock
     {
-        ChunkEntity ChunkEntity { get; }
+        ChunkEntity Chunk { get; }
 
-        Vector3 Position { get; }
+        IntVector3 Position { get; }
+
+        IntVector3 WorldPosition { get; }
 
         IBlockInfo Info { get; }
 
-        void SetPosition(ChunkEntity chunkEntity, Vector3 position);
-
-        IBlock GetAdjacentBlockIn(Vector3 direction);
+        IBlock GetAdjacentBlockIn(IntVector3 direction);
     }
 }

@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Assets.Scripts.Framework.Utils.Vector;
 using Assets.Scripts.Game.Component.Terrain.Block;
 
 using UnityEngine;
 
-using Debug = UnityEngine.Debug;
-
-namespace Assets.Scripts.Game.Component.Terrain
+namespace Assets.Scripts.Game.Component.Terrain.Chunk
 {
     public class MeshData
     {
         public const float TileSize = 0.25f;
 
-        public List<Vector3> Directions
-        {
-            get { return new List<Vector3>() { Vector3.down, Vector3.up, Vector3.back, Vector3.forward, Vector3.left, Vector3.right }; }
-        }
-
         public List<Vector3> Vertices { get; private set; }
         public List<int> Triangles { get; private set; }
         public List<Vector2> UVs { get; private set; }
+
+        public bool IsReady = false;
 
         public MeshData()
         {
@@ -33,17 +29,16 @@ namespace Assets.Scripts.Game.Component.Terrain
             Vertices.Clear();
             Triangles.Clear();
             UVs.Clear();
+
+            IsReady = false;
         }
 
         public void AddBlock(IBlock block)
         {
-            foreach (var direction in Directions)
-            {
-                AddFaceIfSolid(block, direction);
-            }
+            foreach (var direction in IntVector3.Directions) AddFaceIfSolid(block, direction);
         }
 
-        private void AddFaceIfSolid(IBlock block, Vector3 direction)
+        private void AddFaceIfSolid(IBlock block, IntVector3 direction)
         {
             if (block.GetType() == typeof(AirBlock)) return;
 
@@ -60,12 +55,12 @@ namespace Assets.Scripts.Game.Component.Terrain
             }
         }
 
-        private void AddFaceVertices(IBlock block, Vector3[] offsets)
+        private void AddFaceVertices(IBlock block, IEnumerable<Vector3> offsets)
         {
-                foreach (var vector in offsets)
-                {;
-                    Vertices.Add(block.Position + vector);
-                }
+            foreach (var vector in offsets)
+            {
+                Vertices.Add(block.Position.ToVector3() + vector);
+            }
         }
 
         private void AddFaceTriangles()
@@ -79,12 +74,12 @@ namespace Assets.Scripts.Game.Component.Terrain
             Triangles.Add(Vertices.Count - 1);
         }
 
-        private void AddFaceUvs(IBlock block, Vector3 direction)
+        private void AddFaceUvs(IBlock block, IntVector3 direction)
         {
             UVs.AddRange(GetFaceUvs(block, direction));
         }
 
-        private IEnumerable<Vector2> GetFaceUvs(IBlock block, Vector3 direction)
+        private IEnumerable<Vector2> GetFaceUvs(IBlock block, IntVector3 direction)
         {
             var uvs = new Vector2[4];
             var tilePos = block.Info.GetTileCoordinates(direction);
